@@ -14,7 +14,9 @@ env:
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   MIN_LINE_COVERAGE: 70
-
+defaults:
+  run:
+    working-directory: lb1
 jobs:
   lint:
     name: Code quality (analyzers + style)
