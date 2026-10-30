@@ -37,7 +37,7 @@ jobs:
         shell: bash
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
-          dotnet publish laba1/laba1.csproj \
+            dotnet publish lb1/laba1/laba1.csproj \
             -c Release \
             -r "${{ matrix.rid }}" \
             --self-contained true \
