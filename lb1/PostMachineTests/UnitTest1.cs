@@ -372,7 +372,7 @@ namespace Laba1.Tests
         {
             var a = CreateSimpleProgram();
             Assert.That(a.Equals(null), Is.False);
-           Assert.That((bool)a.Equals((object?)null), Is.False);
+           Assert.That((bool)(a.Equals((object?)null)), Is.False);
         }
 
         [Test]
