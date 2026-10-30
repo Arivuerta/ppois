@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_VERSION: 10.0.x
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  MIN_LINE_COVERAGE: 70
+
+jobs:
+  lint:
+    name: Code quality (analyzers + style)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Restore
+        run: dotnet restore laba1.slnx
+      - name: Build with warnings as errors
+        run: dotnet build laba1.slnx -c Release --no-restore -p:TreatWarningsAsErrors=true
+      - name: Check code style
+        run: dotnet format style laba1.slnx --verify-no-changes --severity warn --no-restore
+
+  test:
+    name: Tests + coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Restore
+        run: dotnet restore laba1.slnx
+      - name: Run tests with coverage
+        run: >
+          dotnet test laba1.slnx -c Release --no-restore
+          --settings coverlet.runsettings
+          --collect:"XPlat Code Coverage"
+          --results-directory ./TestResults
+          --logger trx
+      - name: Install ReportGenerator
+        if: always()
+        run: dotnet tool install --global dotnet-reportgenerator-globaltool --version "5.*"
+      - name: Merge coverage reports
+        if: always()
+        run: >
+          reportgenerator
+          -reports:"TestResults/**/coverage.cobertura.xml"
+          -targetdir:coverage
+          -reporttypes:"Cobertura;HtmlInline;MarkdownSummaryGithub;TextSummary"
+      - name: Coverage summary
+        if: always()
+        run: |
+          cat coverage/Summary.txt
+          cat coverage/SummaryGithub.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Enforce minimum coverage
+        run: |
+          python3 - <<'PY'
+          import os, sys
+          import xml.etree.ElementTree as ET
+          minimum = float(os.environ["MIN_LINE_COVERAGE"])
+          actual = float(ET.parse("coverage/Cobertura.xml").getroot().get("line-rate")) * 100
+          print(f"Line coverage: {actual:.1f}% (minimum {minimum:.1f}%)")
+          if actual < minimum:
+              sys.exit(f"Coverage {actual:.1f}% is below the required {minimum:.1f}%")
+          PY
+      - name: Upload test results and coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-and-coverage
+          path: |
+            TestResults/**/*.trx
+            coverage/
