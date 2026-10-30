@@ -290,19 +290,18 @@ namespace Laba1.Tests
         }
 
        [Test]
-public void Run_MaxStepsCustom_RespectsLimit()
-{
-    var m = new PostMachine();
-    m.AddCommand(new PostCommand(CommandType.Right, 1));
+        [Test]
+        public void Run_MaxStepsCustom_RespectsLimit()
+        {
+            var m = new PostMachine();
+            m.AddCommand(new PostCommand(CommandType.Right, 1));
 
-    var ex = Assert.Throws<InvalidOperationException>(() => m.Run(maxSteps: 5));
-    
-    // Добавьте эту проверку:
-    if (ex != null)
-    {
-        Assert.That(ex.Message, Does.Contain("5"));
-    }
-}
+            var ex = Assert.Throws<InvalidOperationException>(() => m.Run(maxSteps: 5));
+            
+            // Вставили эти две строки вместо старой:
+            Assert.That(ex, Is.Not.Null);
+            Assert.That(ex.Message, Does.Contain("5")); 
+        }
 
         // ========== Reset ==========
 
