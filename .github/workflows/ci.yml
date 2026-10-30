@@ -27,7 +27,7 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Restore
-        run: dotnet restore laba1.slnx
+        run: dotnet restore lab1.slnx
       - name: Build with warnings as errors
         run: dotnet build laba1.slnx -c Release --no-restore -p:TreatWarningsAsErrors=true
       - name: Check code style
