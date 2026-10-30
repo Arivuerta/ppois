@@ -348,5 +348,31 @@ namespace Laba1
         {
             return Math.Abs(a - b) < 1e-10;
         }
+                /// <summary>
+        /// Определяет, равен ли указанный объект текущему объекту.
+        /// </summary>
+        public override bool Equals(object? obj)
+        {
+            // Если объект не является Vector3D, он не может быть равен текущему
+            if (obj is not Vector3D other)
+                return false;
+
+            // Используем ту же логику сравнения, что и в операторе ==
+            return Equal(startX, other.startX) &&
+                   Equal(startY, other.startY) &&
+                   Equal(startZ, other.startZ) &&
+                   Equal(endX, other.endX) &&
+                   Equal(endY, other.endY) &&
+                   Equal(endZ, other.endZ);
+        }
+
+        /// <summary>
+        /// Возвращает хеш-код для текущего объекта.
+        /// </summary>
+        public override int GetHashCode()
+        {
+            // Используем HashCode.Combine для генерации хеша на основе полей
+            return HashCode.Combine(startX, startY, startZ, endX, endY, endZ);
+        }
     }
 }
