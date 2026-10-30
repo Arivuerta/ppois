@@ -6,8 +6,8 @@ insert_final_newline = true
 
 [*.cs]
 indent_size = 4
-# Лишние using
-dotnet_diagnostic.IDE0005.severity = warning
+# Лишние using не вводила, он ругается на  using System
+dotnet_diagnostic.IDE0005.severity = none
 # Неиспользуемый private-член
 dotnet_diagnostic.IDE0051.severity = warning
 # Лишнее присваивание
