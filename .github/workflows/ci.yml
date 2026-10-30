@@ -45,8 +45,7 @@ jobs:
         run: dotnet restore lab1.slnx  
       - name: Run tests with coverage
         run: >
-          dotnet test lab1.slnx -c Release --no-restore  # <--- И здесь
-          --settings coverlet.runsettings
+          dotnet test lab1.slnx -c Release --no-restore 
           --collect:"XPlat Code Coverage"
           --results-directory ./TestResults
           --logger trx
