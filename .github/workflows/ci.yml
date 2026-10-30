@@ -18,6 +18,17 @@ defaults:
   run:
     working-directory: lb1
 jobs:
+debug:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check files
+        run: |
+          pwd
+          ls -la
+          ls -la lb1
+          find . -name "*.slnx"
   lint:
     name: Code quality (analyzers + style)
     runs-on: ubuntu-latest
