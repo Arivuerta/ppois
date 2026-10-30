@@ -19,15 +19,18 @@ defaults:
     working-directory: lb1
 jobs:
 debug:
+    name: Check project structure
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Check files
         run: |
+          echo "Current directory:"
           pwd
+          echo "Files in current directory:"
           ls -la
-          ls -la lb1
+          echo "Solution files:"
           find . -name "*.slnx"
   lint:
     name: Code quality (analyzers + style)
