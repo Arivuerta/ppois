@@ -1,0 +1,106 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_VERSION: 10.0.x
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  checks:
+    uses: ./.github/workflows/ci.yml
+
+  build:
+    name: Build ${{ matrix.rid }}
+    needs: checks
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - { os: ubuntu-latest,  rid: linux-x64, archive: tar.gz }
+          - { os: windows-latest, rid: win-x64,   archive: zip }
+          - { os: macos-latest,   rid: osx-arm64, archive: tar.gz }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Publish (self-contained, single file)
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          dotnet publish laba1/laba1.csproj \
+            -c Release \
+            -r "${{ matrix.rid }}" \
+            --self-contained true \
+            -p:PublishSingleFile=true \
+            -p:IncludeNativeLibrariesForSelfExtract=true \
+            -p:InvariantGlobalization=true \
+            -p:DebugType=none \
+            -p:Version="$VERSION" \
+            -o "publish/${{ matrix.rid }}"
+
+      - name: Smoke test
+        shell: bash
+        run: |
+          EXE="publish/${{ matrix.rid }}/Laba1"
+          if [ "${{ matrix.rid }}" = "win-x64" ]; then EXE="$EXE.exe"; fi
+          OUT="$(printf 'x\n' | "$EXE")"
+          echo "$OUT"
+          echo "$OUT" | grep -q "3D"
+
+      - name: Package (zip)
+        if: matrix.archive == 'zip'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          Compress-Archive -Path "publish/${{ matrix.rid }}/*" -DestinationPath "dist/Laba1-${{ github.ref_name }}-${{ matrix.rid }}.zip"
+
+      - name: Package (tar.gz)
+        if: matrix.archive == 'tar.gz'
+        shell: bash
+        run: |
+          mkdir -p dist
+          tar -C "publish/${{ matrix.rid }}" -czf "dist/Laba1-${GITHUB_REF_NAME}-${{ matrix.rid }}.tar.gz" .
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ matrix.rid }}
+          path: dist/*
+          if-no-files-found: error
+
+  release:
+    name: Publish GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: dist-*
+          merge-multiple: true
+          path: dist
+
+      - name: Checksums
+        run: cd dist && sha256sum * > SHA256SUMS.txt && cat SHA256SUMS.txt
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PRERELEASE=""
+          if [[ "$GITHUB_REF_NAME" == *-* ]]; then PRERELEASE="--prerelease"; fi
+          gh release create "$GITHUB_REF_NAME" dist/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "$GITHUB_REF_NAME" \
+            --generate-notes \
+            $PRERELEASE
