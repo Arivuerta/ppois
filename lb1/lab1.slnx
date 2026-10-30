@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Laba1/Lab1.csproj" />
+  <Project Path="PostCommandTests/PostCommandTests.csproj" Id="3bcdecf6-2d57-4807-9e8d-ef61dac5f54f" />
+  <Project Path="PostMachineTests/PostMachineTests.csproj" Id="9561ba81-52bb-4e6e-91b9-12947f244cdd" />
+  <Project Path="TestVector3D/TestVector3D.csproj" Id="acd442bc-72de-4002-9706-7191f61dbfd2" />
+</Solution>

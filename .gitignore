@@ -1,0 +1,24 @@
+﻿# Сборка
+*.exe
+*.o
+*.obj
+*.out
+*.pdb
+*.ilk
+build/
+Debug/
+Release/
+x64/
+cmake-build-*/
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
+# DocFX
+_site/
+api/
+xrefmap.yml
