@@ -12,7 +12,7 @@ class EntryPoint
         Console.WriteLine("2 — Вектор 3D");
         Console.Write("Выбор: ");
 
-        string choice = Console.ReadLine();
+        string? choice = Console.ReadLine();
 
         switch (choice)
         {
