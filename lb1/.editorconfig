@@ -1,0 +1,16 @@
+root = true
+
+[*]
+indent_style = space
+insert_final_newline = true
+
+[*.cs]
+indent_size = 4
+# Лишние using
+dotnet_diagnostic.IDE0005.severity = warning
+# Неиспользуемый private-член
+dotnet_diagnostic.IDE0051.severity = warning
+# Лишнее присваивание
+dotnet_diagnostic.IDE0059.severity = warning
+# Неиспользуемый параметр
+dotnet_diagnostic.IDE0060.severity = warning
