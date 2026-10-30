@@ -289,7 +289,6 @@ namespace Laba1.Tests
             Assert.Throws<InvalidOperationException>(() => m.Run(maxSteps: 100));
         }
 
-       [Test]
         [Test]
         public void Run_MaxStepsCustom_RespectsLimit()
         {
