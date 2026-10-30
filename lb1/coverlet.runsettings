@@ -5,8 +5,7 @@
       <DataCollector friendlyName="XPlat code coverage">
         <Configuration>
           <Format>cobertura</Format>
-          <Include>[Laba1]*</Include>
-          <ExcludeByFile>**/Main.cs,**/Program.cs,**/Program2.cs</ExcludeByFile>
+          <ExcludeByFile>**/Main.cs,**/Program.cs,**/Program2.cs,**/Menu*.cs</ExcludeByFile>
           <SkipAutoProps>true</SkipAutoProps>
         </Configuration>
       </DataCollector>
