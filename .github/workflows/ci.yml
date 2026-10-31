@@ -16,7 +16,7 @@ env:
   MIN_LINE_COVERAGE: 70
 defaults:
   run:
-    working-directory: lb1
+    working-directory: laba1
 jobs:
   lint:
     name: Code quality (analyzers + style)
@@ -82,5 +82,5 @@ jobs:
         with:
           name: test-and-coverage
           path: |
-            lb1/TestResults/**/*.trx
-            lb1/coverage/
+            laba1/TestResults/**/*.trx
+            laba1/coverage/
