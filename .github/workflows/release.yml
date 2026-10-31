@@ -12,7 +12,7 @@ env:
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   APP_NAME: Laba1                         # имя исполняемого файла (задаётся принудительно при publish)
-  PROJECT: lb1/laba1/laba1.csproj         # путь к проекту от корня репозитория
+  PROJECT: laba1/laba1/laba1.csproj         # путь к проекту от корня репозитория
 
 jobs:
   # 1. Проверки: lint + тесты + покрытие (переиспользуем ci.yml)
@@ -109,20 +109,6 @@ jobs:
       - name: Release notes
         run: |
           cat > notes.md <<'EOF'
-          ## Как запустить
-          Установка .NET SDK/Runtime **не требуется**.
-
-          1. Скачайте архив для своей ОС и `SHA256SUMS.txt`.
-          2. Проверьте контрольную сумму (необязательно).
-          3. Распакуйте архив и запустите файл `Laba1` (`Laba1.exe` на Windows).
-
-          **Windows:** если SmartScreen блокирует запуск, нажмите «Подробнее» → «Выполнить в любом случае» (файл не подписан).
-
-          **macOS:** выполните `xattr -d com.apple.quarantine ./Laba1` и `chmod +x ./Laba1`.
-
-          **Linux:** выполните `chmod +x ./Laba1`.
-          EOF
-
       - name: Create release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -137,7 +123,6 @@ jobs:
             --verify-tag \
             $PRERELEASE
 
-  # 4. Проверка: скачиваем файлы ИЗ Releases и запускаем на чистых раннерах
   verify:
     name: Verify release (${{ matrix.rid }})
     needs: release
