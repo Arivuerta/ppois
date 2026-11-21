@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="laba1/laba1.csproj" />
+  <Project Path="PostCommandTests/PostCommandTests.csproj" />
+  <Project Path="PostMachineTests/PostMachineTests.csproj" />
+  <Project Path="TestVector3D/TestVector3D.csproj" />
+</Solution>
