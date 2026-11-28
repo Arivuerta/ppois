@@ -1,0 +1,40 @@
+name: CI Lab 2
+
+on:
+  push:
+    branches: [ "feature-laba2" ]
+    paths:
+      - 'lab2/**'
+      - '.github/workflows/ci.yml'
+  pull_request:
+    branches: [ "main" ] # Сработает только при открытии PR из вашей ветки в main
+    paths:
+      - 'lab2/**'
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore
+      run: dotnet restore lab2/lab2.Tests/lab2.Tests.csproj
+
+    - name: Build
+      run: dotnet build lab2/lab2.Tests/lab2.Tests.csproj --configuration Release --no-restore
+
+    - name: Test & Coverage
+      run: dotnet test lab2/lab2.Tests/lab2.Tests.csproj --no-build --configuration Release --collect:"XPlat Code Coverage" --settings lab2/lab2.Tests/coverlet.runsettings
+
+    - name: Coverage Report
+      run: |
+        dotnet tool install -g dotnet-reportgenerator-globaltool
+        reportgenerator -reports:"lab2/lab2.Tests/TestResults/*/coverage.cobertura.xml" -targetdir:"coveragereport" -reporttypes:TextSummary
+        type coveragereport\Summary.txt

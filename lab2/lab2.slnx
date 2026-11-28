@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="lab2.Tests/lab2.Tests.csproj" />
+  <Project Path="lab2/lab2.csproj" Id="15fff0ce-473b-444d-b631-5e6ef4f1f991" />
+</Solution>
