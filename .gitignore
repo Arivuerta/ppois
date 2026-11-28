@@ -1,0 +1,36 @@
+﻿# Сборка
+*.exe
+*.o
+*.obj
+*.out
+*.pdb
+*.ilk
+build/
+Debug/
+Release/
+x64/
+cmake-build-*/
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
+# DocFX
+_site/
+api/
+xrefmap.yml
+
+# Результаты тестов
+TestResults/
+*.trx
+
+# NuGet
+packages/
+# .NET / C# сборка и отчёты покрытия
+[Bb]in/
+[Oo]bj/
+coveragereport/
+
